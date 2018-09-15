@@ -8,6 +8,7 @@
 
 {% block head %}
 {% endblock %}
+
 <body>
     {% for message in messages %}
     <div class="alert {% if message.tags == 'error' %}alert-danger{% endif %} {% if message.tags == 'success' %}alert-success{% endif %} alert-dismissible alert-message"
@@ -38,43 +39,29 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="empresaDropdown">
                         <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-empresas' %}active{% endif %}"
-                            href="{% url 'empresas:lista-empresas' %}">Empresas</a>
+                            href="#">Empresas</a>
                         <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-sucursales' %}active{% endif %}"
-                            href="{% url 'empresas:lista-sucursales' %}">Sucursales</a>
+                            href="#">Sucursales</a>
                         <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-departamentos' %}active{% endif %}"
-                            href="{% url 'empresas:lista-departamentos' %}">Departamentos</a>
+                            href="#">Departamentos</a>
                         <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-cargos' %}active{% endif %}"
-                            href="{% url 'empresas:lista-cargos' %}">Cargos</a>
+                            href="#">Cargos</a>
                     </div>
                 </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'lista-empleados' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'empleados:lista-empleados' %}">Empleados</a>
+                    <a class="nav-link" href="#">Empleados</a>
                 </li>
-                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'lista-tipos-actividades' or request.resolver_match.url_name == 'lista-actividades' or request.resolver_match.url_name == 'lista-macro-actividades' %}active{% endif %}">
-                    <a class="nav-link dropdown-toggle" href="#" id="planificacionDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Planificación de SSO
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="planificacionDropdown">
-                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-tipos-actividades' %}active{% endif %}"
-                            href="{% url 'planificaciones:lista-tipos-actividades' %}">Tipos de actividades</a>
-                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-macro-actividades' %}active{% endif %}"
-                            href="{% url 'planificaciones:lista-macro-actividades' %}">Macro actividades</a>
-                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-actividades' %}active{% endif %}"
-                            href="{% url 'planificaciones:lista-actividades' %}">Actividades</a>
-
-                    </div>
-                </li>
+              
                 {% endif %}
             </ul>
 
             {% if user.is_authenticated %}
             <span class="navbar-text">
-                <a href="{% url 'usuarios:logout' %}">Salir</a>
+                <a href="{% url 'logout' %}">Salir</a>
             </span>
             {% else %}
             <span class="navbar-text">
-                <a href="{% url 'usuarios:login' %}">Login</a>
+                <a href="{% url 'home' %}">Login</a>
             </span>
             {% endif %}
         </div>

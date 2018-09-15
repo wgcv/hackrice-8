@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 
+from decimal import *
+
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Avg
+from math import sqrt
 from .forms import SignUpForm, TransactionForm
-from .models import DataUser, Transaction
+from .models import DataUser, Transaction, Message, MessageDescription
 # Create your views here.
 
 def login(request):
@@ -60,7 +63,13 @@ def createUser(request):
 def dashboard(request):
     datauser = DataUser.objects.get(user = request.user)
     history = Transaction.objects.filter(user = request.user).order_by('-date')[:10]
-    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history})
+    if(datauser.progress > 0):
+        progress = (datauser.progress / (datauser.next_progress )) * 100
+    else:
+        progress = 0
+    if (Message.objects.filter(user = request.user).count()):
+        return redirect('message')
+    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history, 'progress': int(progress)})
 
 @login_required
 def operations(request):
@@ -72,17 +81,70 @@ def operations(request):
             if(transaction.type_transaction != 'DP'):
                 transaction.amount = transaction.amount  * -1
             datauser = DataUser.objects.get(user = request.user)
-            if(datauser.amount + transaction.amount > 0):
+            if(datauser.amount + transaction.amount >= 0):
                 datauser.amount = datauser.amount + transaction.amount
                 transaction.save()
                 datauser.save()
+                check(request, transaction)
+                progress(request, transaction, 0)
             else:
                 return render(request, 'error.html')
             return redirect('dashboard')
         else:
-            return redirect('opeation')
+            return render(request, 'error.html')
     else:
         form = TransactionForm()
     return render(request, 'operation.html', {
         'form': form
     })
+
+@login_required
+def message(request):
+    message = Message.objects.filter(user = request.user)
+    if( len(message) > 0):
+        message = message[0]
+        message.delete()
+        return render(request, 'message.html', {'message': message})
+    else:
+        return redirect('dashboard')
+    history = Transaction.objects.filter(user = request.user).order_by('-date')[:10]
+    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history})
+
+def check(request, transaction):
+    datauser = DataUser.objects.get(user = request.user)
+    how_many = Transaction.objects.filter(user = request.user).count()
+    avg = Transaction.objects.filter(user = request.user).aggregate(avg = Avg('amount'))['avg']
+    last_3_transactions = Transaction.objects.filter(user = request.user).order_by('-date')[:3]
+    if(last_3_transactions[0].amount < 0 and last_3_transactions[1].amount < 0 and last_3_transactions[2].amount < 0):
+        message = Message(message=MessageDescription.objects.get(id=3), user = request.user)
+        message.save()
+    if(transaction.amount > avg):
+        message = Message(message=MessageDescription.objects.get(id=4), user = request.user)
+        message.save()
+    if(how_many < 1):
+        message = Message(message=MessageDescription.objects.get(id=3) , user = request.user)
+        message.save()
+    if(datauser.amount > 100000):
+        message = Message(message=MessageDescription.objects.get(id=5), user = request.user)
+        message.save()
+
+def progress(request, transaction, points):
+    datauser = DataUser.objects.get(user = request.user)
+    total = Decimal(datauser.next_progress)
+    add = Decimal(0)
+    if(transaction):
+        if(transaction.amount > 0):
+            add = add + transaction.amount * Decimal(0.10)
+        add = add + Decimal(20)
+    add = add + Decimal(points)
+    while((datauser.progress+add) >= total):
+        datauser.level = datauser.level+1
+        add = -1* (total-((datauser.progress+add)))
+        print(add)
+        datauser.progress = 0
+        datauser.next_progress = total * Decimal(1.25)
+        total = datauser.next_progress
+    if((datauser.progress+add)<total):
+        if(add >0):
+            datauser.progress = datauser.progress + add
+    datauser.save()
