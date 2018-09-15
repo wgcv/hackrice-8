@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="UTF-8">
+<title>Bank Advisor</title>
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<script src="/static/js/jquery-3.3.1.slim.min.js"></script>
+
+{% block head %}
+{% endblock %}
+
+<body>
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% endif %} {% if message.tags == 'success' %}alert-success{% endif %} alert-dismissible alert-message"
+        role="alert" style="position: absolute;top: 4rem;right: 2rem;z-index: 10000">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Sistema de SSO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+
+            <ul class="navbar-nav mr-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <a class="nav-link" href="/">Inicio</a>
+                </li>
+                <li class="nav-item dropdown {% if request.resolver_match.url_name == 'lista-empresas' or request.resolver_match.url_name == 'lista-sucursales' or request.resolver_match.url_name == 'lista-departamentos' or  request.resolver_match.url_name == 'lista-cargos'%}active{% endif %}">
+                    <a class="nav-link dropdown-toggle" href="#" id="empresaDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Empresa
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="empresaDropdown">
+                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-empresas' %}active{% endif %}"
+                            href="#">Empresas</a>
+                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-sucursales' %}active{% endif %}"
+                            href="#">Sucursales</a>
+                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-departamentos' %}active{% endif %}"
+                            href="#">Departamentos</a>
+                        <a class="dropdown-item {% if request.resolver_match.url_name == 'lista-cargos' %}active{% endif %}"
+                            href="#">Cargos</a>
+                    </div>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'lista-empleados' %}active{% endif %}">
+                    <a class="nav-link" href="#">Empleados</a>
+                </li>
+              
+                {% endif %}
+            </ul>
+
+            {% if user.is_authenticated %}
+            <span class="navbar-text">
+                <a href="{% url 'logout' %}">Salir</a>
+            </span>
+            {% else %}
+            <span class="navbar-text">
+                <a href="{% url 'home' %}">Login</a>
+            </span>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container mt-3">
+
+        <div class="row">
+            <div class="col-12">
+                {% block content %}
+                {% endblock %}
+
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script>setTimeout(function () {
+            $('.alert-message').hide();
+        }, 2400);</script>
+</body>
+
+
+</html>

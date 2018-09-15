@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+{% load widget_tweaks %}
+Level: {{datauser.level}}
+Progress: {{datauser.progress}}
+Amount:{{datauser.amount}}
+
+<br>
+{% for transaction in history %}
+Amount: {{transaction.amount}}
+Description: {{transaction.description}}
+<br>
+{% endfor %}
+
+<a href="{% url 'operations' %}" class="btn btn-primary">Operations</a>
+
+{% endblock %}
