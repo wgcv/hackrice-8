@@ -27,7 +27,11 @@ def login(request):
     })
 
 def home(request):
-    return render(request, 'home.html')
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    else:
+        return render(request, 'home.html')
 
 def logoutView(request):
     logout(request)
@@ -65,9 +69,15 @@ def operations(request):
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
-            transaction.save()
+            if(transaction.type_transaction != 'DP'):
+                transaction.amount = transaction.amount  * -1
             datauser = DataUser.objects.get(user = request.user)
-            datauser.amount = datauser.amount + transaction.amount
+            if(datauser.amount + transaction.amount > 0):
+                datauser.amount = datauser.amount + transaction.amount
+                transaction.save()
+                datauser.save()
+            else:
+                return render(request, 'error.html')
             return redirect('dashboard')
         else:
             return redirect('opeation')
