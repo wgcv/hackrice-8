@@ -157,7 +157,7 @@ def check(request, transaction):
     if(transaction.amount > avg):
         message = Message(message=MessageDescription.objects.get(id=4), user = request.user)
         message.save()
-    if(how_many < 1):
+    if(how_many < 2):
         message = Message(message=MessageDescription.objects.get(id=2) , user = request.user)
         message.save()
     if(datauser.amount > 100000):
