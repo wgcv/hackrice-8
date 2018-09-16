@@ -158,7 +158,7 @@ def check(request, transaction):
         message = Message(message=MessageDescription.objects.get(id=4), user = request.user)
         message.save()
     if(how_many < 1):
-        message = Message(message=MessageDescription.objects.get(id=3) , user = request.user)
+        message = Message(message=MessageDescription.objects.get(id=2) , user = request.user)
         message.save()
     if(datauser.amount > 100000):
         message = Message(message=MessageDescription.objects.get(id=5), user = request.user)
