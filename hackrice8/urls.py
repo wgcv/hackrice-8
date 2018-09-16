@@ -29,5 +29,6 @@ urlpatterns = [
     path('doit/', views.doit,  name='doit'),
     path('message/<int:id>/', views.message,  name='message'),
     path('faq/', views.faq,  name='faq'),
+    path('prices/', views.prices,  name='prices'),
 
 ]

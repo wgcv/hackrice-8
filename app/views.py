@@ -114,6 +114,11 @@ def faq(request):
     messages = MessageDescription.objects.all()
     return render(request, 'faq.html', {'messages': messages})
 
+@login_required
+def prices(request):
+    return render(request, 'prizes.html')
+
+
 
 @login_required
 def doit(request):
