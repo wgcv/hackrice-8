@@ -84,7 +84,12 @@
                             <tbody>
                                 {% for transaction in history %}
                                 <tr>
-                                    <td>{{ transaction.amount }}</td>
+                                    {% if transaction.amount < 0 %}
+                                    <td style="color:red;">{{ transaction.amount }}</td>
+                                    {% else %}
+                                    <td style="color:#008000;">{{ transaction.amount }}</td>
+
+                                    {% endif %}
                                     <td>{{ transaction.description }}</td>
                                 </tr>
                                 {% endfor %}
