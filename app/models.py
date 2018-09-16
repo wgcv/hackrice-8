@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class DataUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     progress = models.IntegerField(default = 0)
-    next_progress = models.IntegerField(default = 40)
+    next_progress = models.IntegerField(default = 80)
     level = models.IntegerField(default = 1)
     amount = models.DecimalField(max_digits=30, decimal_places=2, default = 0)
     def __str__(self):
