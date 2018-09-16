@@ -24,7 +24,10 @@
             {{ message.description }}
             {% if message.short_description != "" %}
 <br><br>            <center>
-            <iframe width="100%" height="auto" src="{{message.short_description}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="videoWrapper">
+
+            <iframe width="560" height="349" src="{{message.short_description}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
         </center>
             {% endif %}
 
