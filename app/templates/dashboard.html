@@ -123,7 +123,7 @@
                     {{ message.message.description}}
             </div>
             <div class="modal-footer">
-              <a href class="btn btn-secondary">Read more</a>
+              <a href ="{% url 'message' message.message.id %}" class="btn btn-secondary">Read more</a>
               <a href="{% url 'doit' %}"  class="btn btn-info">Do it!</a>
             </div>
           </div>

@@ -6,11 +6,12 @@
     {% for hidden_field in form.hidden_fields %}
     {{ hidden_field }}
   {% endfor %}
-  <div class="row">
-    <div class="col-md-6 m-auto">
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-body">
+        
       <h2>Make an operation</h2>
         {% for field in form.visible_fields %}
-
         <div class="form-group">
             {{ field.label_tag }}
             {% render_field field class="form-control" %}
@@ -22,11 +23,13 @@
           </div>
         {% endfor %}
         <div class="col-12 p-0 text-right">
-            <button type="submit" class="btn btn-primary mr-2">Go</button>
+            <button type="submit" class="btn btn-info mr-2">Go</button>
 
       </div>
-    </div>
+
   </div>
-   
+</div>
+</div>
+</div>
   </form>
 {% endblock %}
