@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from math import sqrt
-from .forms import SignUpForm, TransactionForm
+from .forms import SignUpForm, TransactionForm, SpecialTransactionForm
 from .models import DataUser, Transaction, Message, MessageDescription
 # Create your views here.
 
@@ -62,14 +62,19 @@ def createUser(request):
 @login_required
 def dashboard(request):
     datauser = DataUser.objects.get(user = request.user)
-    history = Transaction.objects.filter(user = request.user).order_by('-date')[:10]
+    history = Transaction.objects.filter(user = request.user).order_by('-date')
     if(datauser.progress > 0):
         progress = (datauser.progress / (datauser.next_progress )) * 100
     else:
         progress = 0
     if (Message.objects.filter(user = request.user).count()):
-        return redirect('message')
-    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history, 'progress': int(progress)})
+        message = Message.objects.filter(user = request.user)
+        if( len(message) > 0):
+            message = message[0]
+            message.delete()
+    else:
+        message = None
+    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history, 'progress': int(progress), 'message': message})
 
 @login_required
 def operations(request):
@@ -78,7 +83,46 @@ def operations(request):
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.user = request.user
-            if(transaction.type_transaction != 'DP'):
+            if(transaction.type_transaction != 'DP' and  transaction.type_transaction != 'LO' ):
+
+                transaction.amount = transaction.amount  * -1
+            datauser = DataUser.objects.get(user = request.user)
+            if(datauser.amount + transaction.amount >= 0):
+                datauser.amount = datauser.amount + transaction.amount
+                transaction.save()
+                datauser.save()
+                check(request, transaction)
+                progress(request, transaction, 100)
+            else:
+                return render(request, 'error.html')
+            return redirect('dashboard')
+        else:
+            return render(request, 'error.html')
+    else:
+        form = TransactionForm()
+    return render(request, 'operation.html', {
+        'form': form
+    })
+
+@login_required
+def message(request, id):
+    message = MessageDescription.objects.get(pk = id)
+    return render(request, 'message.html', {'message': message})
+
+@login_required
+def faq(request):
+    messages = MessageDescription.objects.all()
+    return render(request, 'faq.html', {'messages': messages})
+
+
+@login_required
+def doit(request):
+    if request.method == 'POST':
+        form = SpecialTransactionForm(request.POST)
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            transaction.user = request.user
+            if(transaction.type_transaction != 'DP' and  transaction.type_transaction != 'LO' ):
                 transaction.amount = transaction.amount  * -1
             datauser = DataUser.objects.get(user = request.user)
             if(datauser.amount + transaction.amount >= 0):
@@ -93,23 +137,10 @@ def operations(request):
         else:
             return render(request, 'error.html')
     else:
-        form = TransactionForm()
-    return render(request, 'operation.html', {
+        form = SpecialTransactionForm()
+    return render(request, 'doit.html', {
         'form': form
     })
-
-@login_required
-def message(request):
-    message = Message.objects.filter(user = request.user)
-    if( len(message) > 0):
-        message = message[0]
-        message.delete()
-        return render(request, 'message.html', {'message': message})
-    else:
-        return redirect('dashboard')
-    history = Transaction.objects.filter(user = request.user).order_by('-date')[:10]
-    return render(request, 'dashboard.html', {'datauser': datauser, 'history':history})
-
 def check(request, transaction):
     datauser = DataUser.objects.get(user = request.user)
     how_many = Transaction.objects.filter(user = request.user).count()

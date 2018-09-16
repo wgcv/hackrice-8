@@ -1,1 +1,23 @@
-Message {{ message.message.tittle }}
+{% extends "base.html" %}
+{% block content %}
+{% load widget_tweaks %}
+<div class="card m-5">
+    <div class="card-header">{{ message.tittle }}</div>
+    <div class="card-body">
+            {{ message.description }}
+            {% if message.short_description != "" %}
+<br><br>            <center>
+            <iframe width="560" height="315" src="{{message.short_description}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </center>
+            {% endif %}
+
+        </div>
+        <div class="mb-5">
+                <center>
+            
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-info">Return</a>
+                </center>
+            </div>
+</div>
+
+{% endblock %}

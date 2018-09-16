@@ -18,3 +18,17 @@ class TransactionForm(ModelForm):
     class Meta:
         model = Transaction
         fields = ('amount', 'type_transaction', 'description' )
+
+class SpecialTransactionForm(ModelForm):
+    transaction_type = (
+    ('IV', 'Invest'),
+    ('LD', 'Long-Term Desposit'),
+    ('LO', 'Loan'),
+    )
+    class Meta:
+        model = Transaction
+        fields = ('amount', 'type_transaction', 'description' )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type_transaction'].choices = self.transaction_type

@@ -16,6 +16,10 @@ transaction_type = (
     ('WD', 'Withdrawal'),
     ('PM', 'Payment'),
     ('TR', 'Transference'),
+    ('IV', 'Invest'),
+    ('LD', 'Long-Term Desposit'),
+    ('LO', 'Loan'),
+
 )
 class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)

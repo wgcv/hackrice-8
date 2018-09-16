@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+#dataTable_length {
+    display: none !important;
+}
+a {
+    color: #333;
+    text-decoration: none;
+}
+a:hover {
+    color: #a3a3a3;
+    text-decoration: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% load widget_tweaks %}
+<div class="card mb-3">
+        <div class="card-header">Faq</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+
+                        <tr>
+                            <th>Topics</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages %}
+                        <tr>
+                            <td><a href="{% url 'message' message.id %}">{{ message.tittle }} </a></td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="mb-2">
+                    <center>
+                
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-info">Return</a>
+                    </center>
+                </div>
+        </div>
+    </div>
+    {% endblock %}

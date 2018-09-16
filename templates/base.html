@@ -26,20 +26,28 @@
 }
     </style>
     <link href="/static/css/full-slider.css" rel="stylesheet">
-
+       
+        <!-- Bootstrap core JavaScript-->
+        <script src="/static/jquery/jquery.min.js"></script>
+        <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+        <!-- Core plugin JavaScript-->
+        <script src="/static/jquery-easing/jquery.easing.min.js"></script>
+    
+        <!-- Page level plugin JavaScript-->
+        <script src="/static/datatables/jquery.dataTables.js"></script>
+        <script src="/static/datatables/dataTables.bootstrap4.js"></script>
+    
+        <!-- Custom scripts for all pages-->
+        <script src="/static/js/sb-admin.min.js"></script>
+    
+        <!-- Demo scripts for this page-->
+        <script src="/static/js/demo/datatables-demo.js"></script>
 {% block head %}
 {% endblock %}
 
 <body id="page-top">
-        {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %}alert-danger{% endif %} {% if message.tags == 'success' %}alert-success{% endif %} alert-dismissible alert-message"
-        role="alert" style="position: absolute;top: 4rem;right: 2rem;z-index: 10000">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-    {% endfor %}
+
 
             <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
         
@@ -75,23 +83,7 @@
                 {% endblock %}
 
             
-       
-        <!-- Bootstrap core JavaScript-->
-        <script src="/static/jquery/jquery.min.js"></script>
-        <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
-    
-        <!-- Core plugin JavaScript-->
-        <script src="/static/jquery-easing/jquery.easing.min.js"></script>
-    
-        <!-- Page level plugin JavaScript-->
-        <script src="/static/datatables/jquery.dataTables.js"></script>
-        <script src="/static/datatables/dataTables.bootstrap4.js"></script>
-    
-        <!-- Custom scripts for all pages-->
-        <script src="/static/js/sb-admin.min.js"></script>
-    
-        <!-- Demo scripts for this page-->
-        <script src="/static/js/demo/datatables-demo.js"></script>
+
     <script>setTimeout(function () {
             $('.alert-message').hide();
         }, 2400);</script>
