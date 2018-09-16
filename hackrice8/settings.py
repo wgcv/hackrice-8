@@ -25,7 +25,7 @@ SECRET_KEY = 'gf9ov!_ga(^fcbbko7hygaaneh_n48+*$u)cfn_v)as($sbu34'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
